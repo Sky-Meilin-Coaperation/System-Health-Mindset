@@ -45,3 +45,10 @@ Wer die Werkbank einmal strukturiert aufbaut, behält 100 % Datenhoheit, arbeite
 │   └── test_api.py        # Erster Verbindungstest gegen den lokalen Server
 └── 02_Orchestration/
     └── SkyOSFullCore/     # Lokaler Klon des Hugging Face Orchestration Spaces
+
+## Model Context Protocol (MCP)
+
+Der lokale MCP-Server (`02_Orchestration/SkyOSFullCore/mcp_server.py`) ist als Brücke in LM Studio integriert.
+
+* **Zweck:** Ermöglicht dem lokalen Modell die direkte Nutzung der modularen Werkzeuge und Workflows aus `SkyOSFullCore`.
+* **Funktion:** Stellt Schnittstellen und Dateioperationen über das standardisierte JSON-RPC-Protokoll bereit, sodass Reasoning-Modelle Aufgaben direkt im lokalen Dateisystem ausführen können.
