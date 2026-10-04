@@ -9,3 +9,7 @@ env/
 models/
 .vscode/
 Thumbs.db
+
+# Orchestration & Cloned Services
+02_Orchestration/SkyOSFullCore/.git
+
