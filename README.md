@@ -26,3 +26,12 @@ Das eigentliche Geheimnis moderner KI-Entwicklung: **Du musst nicht in Programmi
   - Ein klarer Sicherheits- und Rechtestandard (**Sicherheitsrichtlinien**).
 
 Wer die Werkbank einmal sauber aufbaut, braucht keine zwanzig Cloud-Logins. Man behält 100 % Datenhoheit, arbeitet autark und verbindet Frameworks wie Module zu einer neuen Architektur.
+
+---
+
+## 🌐 Verknüpfte Systeme & Orchestrierung
+
+### SkyOSFullCore (Hugging Face Space)
+- **Space:** [sky-meilin/SkyOSFullCore](https://huggingface.co/spaces/sky-meilin/SkyOSFullCore)
+- **Rolle in der Architektur:** Zentrales Steuerungs- und Orchestrierungs-Framework zur Koordination von Schnittstellen, Agentenlogik und externen Modulen.
+- **Zusammenspiel mit lokalem Setup:** Bildet die Brücke zwischen der lokalen Inferenz-Werkbank (LM Studio / Localhost) und übergeordneten Cloud-/Web-Diensten, ohne lokale Sicherheitsgrenzen aufzuheben.
