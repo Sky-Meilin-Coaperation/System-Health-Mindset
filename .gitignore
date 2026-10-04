@@ -13,3 +13,7 @@ Thumbs.db
 # Orchestration & Cloned Services
 02_Orchestration/SkyOSFullCore/.git
 
+
+# Orchestration workspaces (managed independently)
+02_Orchestration/
+
