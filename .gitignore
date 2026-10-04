@@ -17,3 +17,6 @@ Thumbs.db
 # Orchestration workspaces (managed independently)
 02_Orchestration/
 
+
+# Lokale Umgebungsvariablen
+.env
