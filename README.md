@@ -35,3 +35,12 @@ Wer die Werkbank einmal sauber aufbaut, braucht keine zwanzig Cloud-Logins. Man 
 - **Space:** [sky-meilin/SkyOSFullCore](https://huggingface.co/spaces/sky-meilin/SkyOSFullCore)
 - **Rolle in der Architektur:** Zentrales Steuerungs- und Orchestrierungs-Framework zur Koordination von Schnittstellen, Agentenlogik und externen Modulen.
 - **Zusammenspiel mit lokalem Setup:** Bildet die Brücke zwischen der lokalen Inferenz-Werkbank (LM Studio / Localhost) und übergeordneten Cloud-/Web-Diensten, ohne lokale Sicherheitsgrenzen aufzuheben.
+
+C:\Workspace LM studio\
+├── .gitignore          # Schutzbarriere: Verhindert Upload von Caches und privaten Daten
+├── README.md           # Architektur-Manifest & Schritt-für-Schritt-Anleitung
+├── SECURITY.md         # Sicherheits- und Offenlegungsrichtlinien (Responsible Disclosure)
+├── 01_Projects\
+│   └── test_api.py     # Erster Verbindungstest gegen den lokalen Server
+└── 02_Orchestration\
+    └── SkyOSFullCore\  # Lokaler Klon des Hugging Face Orchestration Spaces
