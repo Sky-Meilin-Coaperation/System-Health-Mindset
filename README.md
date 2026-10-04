@@ -7,7 +7,7 @@
 
 Und aus diesem blinden Fleck, der Hilflosigkeit und der Ohnmacht heraus, habe ich mich entschieden, ich lasse mich nicht aufhalten, von den unzähligen Ablenkungen und auch nicht die unverständlichen readme Datein, die mehr Fluch als Segen waren. Und deswegen komme ich, der Mensch, den niemand jemals auf dem Schirm hatte und von dem noch nie irgendjemand was gehört hat, und startet seine eigene Evolution.
 
-Und dabei habe ich, dass muss ich ehrlich gestehen, keinerlei Vorkenntnisse von Entwicklung; Betriebssystemen oder Künstlicher Intelligenz, die sowohl mächtig als auch destrucktiv sein kann. Aber deswegen ich meine Entscheidung nicht bereut und freue mich auf eine Zukunft, die nicht inden Sternen geschrieben steht.
+Und dabei habe ich, dass muss ich ehrlich gestehen, keinerlei Vorkenntnisse von Entwicklung; Betriebssystemen oder Künstlicher Intelligenz, die sowohl mächtig als auch destrucktiv sein kann. Aber deswegen habe ich meine Entscheidung nicht bereut und freue mich auf eine positive Zukunft, die nicht in den Sternen oder in irgendwelchen Kaffeesätzen zu lesen sind, sondern von uns in Code verfasst!!!
 
 ---
 
