@@ -1,0 +1,7 @@
+{
+  "connectors": [
+    {"name": "google-drive-mcp", "type": "remote", "protocol": "stdio"},
+    {"name": "huggingface-space-mcp", "type": "sdk", "protocol": "fastmcp"},
+    {"name": "lm-studio-local", "endpoint": "http://localhost:1234/v1", "protocol": "openai-compatible"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-10-05",
+      "change": "Initialisierung der SkyAI_Knowledge_System Wissensbasis mit allen 17 Modulen"
+    }
+  ]
+}

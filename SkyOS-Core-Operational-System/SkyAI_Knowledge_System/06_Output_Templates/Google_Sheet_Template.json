@@ -1,0 +1,4 @@
+{
+  "columns": ["Timestamp", "Projekt", "Architektur", "Status", "Log"],
+  "default_tab": "Operational_Log"
+}

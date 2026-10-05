@@ -1,0 +1,6 @@
+{
+  "platform": "Docker",
+  "module": "Playbook & Integration Spec",
+  "status": "Aktiv",
+  "target_env": "SkyOS Core Runtime"
+}

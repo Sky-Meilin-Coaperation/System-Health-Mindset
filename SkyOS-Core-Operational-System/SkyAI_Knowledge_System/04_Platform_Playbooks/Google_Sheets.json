@@ -1,0 +1,6 @@
+{
+  "platform": "Google_Sheets",
+  "module": "Playbook & Integration Spec",
+  "status": "Aktiv",
+  "target_env": "SkyOS Core Runtime"
+}

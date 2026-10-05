@@ -1,0 +1,8 @@
+{
+  "rules": [
+    "Keine Klartext-Credentials in Repositories oder Commits",
+    "READMEs enthalten ausschließlich Schritt-für-Schritt-Aktionsanleitungen, keine Struktur-Bäume",
+    "Zero-Budget Framework: Inferenz primär lokal oder über Free-Tier Hugging Face Spaces",
+    "Jedes Deployment muss idempotent und per CI/CD auditierbar sein"
+  ]
+}

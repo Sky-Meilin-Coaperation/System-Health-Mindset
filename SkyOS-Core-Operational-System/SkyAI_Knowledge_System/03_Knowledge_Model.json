@@ -1,0 +1,9 @@
+{
+  "context_tiers": {
+    "L0_Raw": "Rohdaten aus APIs, Logs und Sheets",
+    "L1_Extracted": "Strukturierte JSON-Payloads und Vektoren",
+    "L2_Processed": "Synthetisierte Workflows und Prompt-Templates",
+    "L3_Verified": "Qualitätsgeprüfte Produktionsartefakte",
+    "L4_Organized": "Master Knowledge Base und System-Manifeste"
+  }
+}

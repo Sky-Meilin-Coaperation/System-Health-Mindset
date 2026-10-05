@@ -1,0 +1,4 @@
+{
+  "auth_strategy": "Environment Variables & Secrets Storage",
+  "required_keys": ["HF_TOKEN", "GRAVATAR_API_KEY", "GOOGLE_WORKSPACE_AUTH"]
+}
