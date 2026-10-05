@@ -1,0 +1,34 @@
+{
+  "project_name": "Sky Meilin – Operationales System-Dashboard",
+  "version": "1.0.0",
+  "architecture": {
+    "pillars": {
+      "pillar_3_technology": {
+        "focus": ["Platform Architecture", "API Integration", "Security & Compliance", "Scalability Design", "DevOps Infrastructure"],
+        "target": "Enterprise-Grade System"
+      },
+      "pillar_4_media": {
+        "focus": ["Programmatic Advertising", "Predictive Targeting", "Cross-Channel Orchestration", "Social Media Strategy", "Content Distribution"],
+        "target": "Wachstumsfoerderung"
+      },
+      "pillar_5_performance": {
+        "focus": ["Real-time Analytics", "Multi-Touch Attribution", "Predictive Forecasting", "A/B Testing Framework", "ROI Optimization"],
+        "target": "Echtzeit-Optimierung"
+      }
+    },
+    "budget_allocation": {
+      "team": {"amount_eur": 1200000, "share_pct": 48},
+      "marketing": {"amount_eur": 800000, "share_pct": 32},
+      "technology": {"amount_eur": 300000, "share_pct": 12},
+      "operations": {"amount_eur": 200000, "share_pct": 8},
+      "total_volume_eur": 2500000
+    },
+    "infrastructure_cost": "EUR 0 (Zero-Cost Free-Tier & Local Orchestration)"
+  },
+  "checklist": {
+    "strategic_docs": true,
+    "infrastructure_files": true,
+    "frontend": true,
+    "error_tracking": true
+  }
+}
