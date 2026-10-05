@@ -1,0 +1,23 @@
+[
+  {
+    "schritt": 1,
+    "phase": "Initialisierung & Dokumentation",
+    "trigger": "Chat-Eingabe oder Terminal-Befehl zur Modul-Erstellung (z.B. 'mcp-bridge')",
+    "aktion": "Google Sheets API wird angesprochen; neuer Eintrag wird im Location-Tab (z.B. 'Berlin') eingefuegt. Spalten: Timestamp, Projektbaum, Architekturbaum, Moduluebersicht, Abhaengigkeiten, Status",
+    "status": "In Arbeit (Dokumentation der genutzten Abhaengigkeiten wie googleapis)"
+  },
+  {
+    "schritt": 2,
+    "phase": "Deployment via Hugging Face SDK",
+    "trigger": "Automatischer Trigger nach Initialisierung",
+    "aktion": "Automatisches Erstellen von Ordnerstrukturen ueber Hugging Face Static SDK; Generierung und Remote-Schreiben von Code, Ausfuehrung von Testlaeufen, autonome Git Commits/Pushes",
+    "status": "Code deployiert, Tests durchgefuehrt, Git-Commits gepusht"
+  },
+  {
+    "schritt": 3,
+    "phase": "Abschluss & Status-Update",
+    "trigger": "Erfolgreich abgeschlossenes Deployment",
+    "aktion": "Status im spezifischen Location-Tab des Google Sheets wird per API auf 'Fertig' gesetzt",
+    "status": "Fertig"
+  }
+]
