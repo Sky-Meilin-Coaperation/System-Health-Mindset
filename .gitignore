@@ -1,22 +1,30 @@
-__pycache__/
-*.py[cod]
-*$py.class
+# Virtual Environment & Python
+venv/
 .venv/
-env/
-*.env
-*.gguf
-*.bin
-models/
-.vscode/
-Thumbs.db
+__pycache__/
+*.pyc
 
-# Orchestration & Cloned Services
-02_Orchestration/SkyOSFullCore/.git
-
-
-# Orchestration workspaces (managed independently)
+# Exclude Proprietary Orchestration / External Tooling
 02_Orchestration/
 
+# Exclude Databases, Sheets, Binary Executables & Media
+*.xlsx
+*.ods
+*.csv
+*.exe
+*.png
+*.jpg
+*.jpeg
 
-# Lokale Umgebungsvariablen
+# Local Test & Deployment Scripts
+test_*.py
+load_*.py
+list_*.py
+deploy_*.py
+sync_*.py
+
+# Secrets & Local Configs
 .env
+.env.*
+*.key
+*.pem
