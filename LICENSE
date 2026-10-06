@@ -1,26 +1,8 @@
-========================================================================
-1. PROPRIETARY INTELLECTUAL PROPERTY NOTICE
-========================================================================
-Copyright (c) 2026 Pascal / Sky Meilin Cooperation. All Rights Reserved.
-
-The documentation, mindset frameworks, methodologies, architectural designs, 
-workflows, and related creative or educational assets contained in this repository 
-are the exclusive intellectual property of the author.
-
-No permission is granted to copy, distribute, modify, create derivative works,
-or use commercially without prior express written consent.
-Licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 
-International (CC-BY-NC-ND-4.0).
-
-========================================================================
-2. TECHNICAL RUNTIME & CODE LICENSE (APACHE 2.0)
-========================================================================
-Where generic tooling scripts or runtime utilities are explicitly provided
-within designated open code modules, they are licensed under:
-
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
+
+   Copyright 2026 Pascal / Sky-Meilin-Coaperation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
