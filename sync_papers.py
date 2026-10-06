@@ -1,22 +1,27 @@
 import os
 import re
+import ssl
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from huggingface_hub import HfApi
 
-# 1. Zielordner initialisieren
+# SSL-Kontext fuer Windows einrichten (nutzt certifi falls vorhanden, sonst unverified fallback)
+try:
+    import certifi
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+except Exception:
+    ssl_context = ssl._create_unverified_context()
+
 TARGET_DIR = Path("papers")
 TARGET_DIR.mkdir(parents=True, exist_ok=True)
 
-# 2. arXiv-IDs aus Hugging Face Sammlungen auslesen
 api = HfApi(token=os.getenv("HF_TOKEN"))
 owner = "sky-meilin"
 
 print(f"Lese Sammlungen fuer {owner} aus...")
 paper_ids = set()
 
-# Bekannte arXiv-IDs aus deinen Sammlungen als Basismenge
 default_papers = {
     "2604.06392", "2603.24517", "2605.10988", "2605.25624",
     "2605.19633", "2605.14386", "2602.09146", "2601.21459",
@@ -43,8 +48,12 @@ def fetch_arxiv_meta(arxiv_id):
     url = f"http://export.arxiv.org/api/query?id_list={clean_id}"
     req = urllib.request.Request(url, headers={"User-Agent": "SkyOS-PaperSync/1.0"})
     
-    with urllib.request.urlopen(req) as resp:
-        tree = ET.fromstring(resp.read())
+    try:
+        with urllib.request.urlopen(req, context=ssl_context) as resp:
+            tree = ET.fromstring(resp.read())
+    except Exception as e:
+        print(f"   [FEHLER] Abruf fuer {clean_id}: {e}")
+        return None
     
     ns = {"atom": "http://www.w3.org/2005/Atom"}
     entry = tree.find("atom:entry", ns)
@@ -68,12 +77,10 @@ def fetch_arxiv_meta(arxiv_id):
 
 index_rows = []
 
-# 3. Paper abrufen und Markdown-Dateien schreiben
 for pid in sorted(paper_ids):
     print(f" - Verarbeite arXiv:{pid}...")
     meta = fetch_arxiv_meta(pid)
     if not meta:
-        print(f"   [FEHLER] Metadaten fuer {pid} nicht erreichbar.")
         continue
     
     filename = f"arxiv_{meta['id'].replace('.', '_')}.md"
@@ -98,7 +105,6 @@ for pid in sorted(paper_ids):
     filepath.write_text(content, encoding="utf-8")
     index_rows.append(f"| [{meta['id']}]({meta['abs_url']}) | [{meta['title']}]({filename}) | {meta['published']} | [PDF]({meta['pdf_url']}) |")
 
-# 4. Zentrale README.md fuer den papers/ Ordner erstellen
 readme_path = TARGET_DIR / "README.md"
 readme_content = f"""# arXiv Forschungsbibliothek (SkyOS)
 
