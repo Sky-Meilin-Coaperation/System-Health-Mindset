@@ -1,16 +1,26 @@
-# Security Policy
+# Sicherheitsrichtlinie
 
-## Supported Versions
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
+## Unterstützte Versionen
+| Version | Unterstützt |
+| ------- | ----------- |
+| 1.0.x   | Ja |
 
-## Reporting a Vulnerability
-Do not open public GitHub issues for security-sensitive bugs or vulnerabilities.
+## Meldung einer Sicherheitslücke
+Öffentliche GitHub-Issues sollten nicht für sicherheitsrelevante Fehler oder Schwachstellen verwendet werden.
 
-Please report all vulnerabilities confidentially via GitHub Private Vulnerability Reporting (PVR) or contact the project maintainers directly.
+Alle Sicherheitsprobleme sollten vertraulich über GitHub Private Vulnerability Reporting (PVR) gemeldet werden oder direkt an die Projektmaintainer gesandt werden.
 
-When filing a report, please include:
-- A clear description of the issue
-- Steps to reproduce
-- Potential impact
+Beim Melden einer Schwachstelle bitte mindestens folgende Informationen angeben:
+- klare Beschreibung des Problems
+- Reproduktionsschritte
+- mögliche Auswirkungen
+- ggf. vorgeschlagene Minderungsvorschläge
+
+## Vertraulichkeit
+Sensible Informationen, Secrets, Tokens und lokale Konfigurationsdaten dürfen nicht in öffentliche Issues, Commits, Logs oder Repository-Dateien gelangen.
+
+## Verantwortliche Nutzung
+Die Projektmitarbeiter behandeln Sicherheitsmeldungen vertraulich und priorisieren die Behebung kritischer Lücken entsprechend dem Risikograd.
+
+## Hinweis
+Die Sicherheitsdokumentation wurde bewusst ins Deutsche übersetzt, damit die Richtlinien und Meldeprozesse für alle Projektbeteiligten verständlich und einheitlich sind.
