@@ -1,0 +1,47 @@
+name: sky_meilin_one_world_one_sky
+description: "Sky Meilin - One World One Sky: Cross-Platform Control Center for SkyOS"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Visuals
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+
+  # WebRTC Real-time Avatar Video & Audio Streaming
+  flutter_webrtc: ^0.9.48+1
+
+  # Networking & Real-time WebSockets
+  http: ^1.2.0
+  web_socket_channel: ^2.4.1
+
+  # Security, Vault & AutoFill Support
+  flutter_secure_storage: ^9.0.0
+  crypto: ^3.0.3
+
+  # Local Media Storage, Reel Vault & Video Player
+  path_provider: ^2.1.2
+  video_player: ^2.8.2
+  share_plus: ^7.2.2
+
+  # Utilities & Localization
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/images/

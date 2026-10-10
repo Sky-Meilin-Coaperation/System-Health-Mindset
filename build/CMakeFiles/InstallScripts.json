@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Workspace LM studio/build/cmake_install.cmake",
+		"C:/Workspace LM studio/build/flutter/cmake_install.cmake",
+		"C:/Workspace LM studio/build/runner/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

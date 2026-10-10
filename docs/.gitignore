@@ -1,0 +1,32 @@
+# ==========================================
+# System Health Evolution - GitIgnore
+# ==========================================
+
+# Lokale Umgebungsvariablen und Secrets
+.env
+.env.local
+
+# Docker Volumes & Datenbank-Daten
+docker-data/
+wordpress_data/
+db_data/
+ollama_data/
+
+# Python Cache & Virtuelle Umgebungen
+__pycache__/
+*.py[cod]
+*.class
+venv/
+env/
+.venv/
+
+# Betriebssystem-spezifische Dateien
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs und Editor-Konfigurationen
+.vscode/
+.idea/
+*.swp
+*.swo

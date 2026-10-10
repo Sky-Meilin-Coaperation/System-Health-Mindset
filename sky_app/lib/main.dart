@@ -1,106 +1,180 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:sky_meilin_one_world_one_sky/services/skyos_api_client.dart';
+import 'package:sky_meilin_one_world_one_sky/ui/screens/skyos_auth_screen.dart';
+import 'package:sky_meilin_one_world_one_sky/ui/widgets/skyos_avatar_video_widget.dart';
+import 'package:sky_meilin_one_world_one_sky/ui/widgets/skyos_vault_gallery_widget.dart';
 
 void main() {
-  runApp(const SkyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const SkyMeilinApp());
 }
 
-class SkyApp extends StatelessWidget {
-  const SkyApp({super.key});
+/// Hauptanwendung für "Sky Meilin - One World One Sky"
+class SkyMeilinApp extends StatelessWidget {
+  const SkyMeilinApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sky Studio',
-      theme: ThemeData.dark(useMaterial3: true),
-      home: const SkyHomeScreen(),
+      title: 'Sky Meilin - One World One Sky',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.teal,
+        scaffoldBackgroundColor: const Color(0xFF0F172A),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.tealAccent,
+          secondary: Colors.emerald,
+          surface: const Color(0xFF1E293B),
+        ),
+        useMaterial3: true,
+      ),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const SkyOSAuthScreen(),
+        '/home': (context) => const MainNavigationShell(),
+      },
     );
   }
 }
 
-class SkyHomeScreen extends StatefulWidget {
-  const SkyHomeScreen({super.key});
+/// Haupt-Navigationsleiste (Shell) zur Steuerung von Stream, Vault & System
+class MainNavigationShell extends StatefulWidget {
+  const MainNavigationShell({super.key});
 
   @override
-  State<SkyHomeScreen> createState() => _SkyHomeScreenState();
+  State<MainNavigationShell> createState() => _MainNavigationShellState();
 }
 
-class _SkyHomeScreenState extends State<SkyHomeScreen> {
-  final TextEditingController _controller = TextEditingController();
-  String _response = 'Bereit für Eingaben...';
+class _MainNavigationShellState extends State<MainNavigationShell> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = const [
+    SkyOSAvatarVideoWidget(
+      serverUrl: 'ws://localhost:8000/ws/v1/avatar/webrtc/s1/flutter_client',
+      sessionId: 's1',
+    ),
+    SkyOSVaultGalleryWidget(),
+    DashboardStatusPage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        backgroundColor: const Color(0xFF1E293B),
+        indicatorColor: Colors.tealAccent.withOpacity(0.2),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.videocam_outlined),
+            selectedIcon: Icon(Icons.videocam, color: Colors.tealAccent),
+            label: 'Avatar Stream',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.video_library_outlined),
+            selectedIcon: Icon(Icons.video_library, color: Colors.tealAccent),
+            label: 'Reel Vault',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard, color: Colors.tealAccent),
+            label: 'Status & Bot',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Status-Dashboard innerhalb der App zur Live-Anzeige aller Teilsysteme
+class DashboardStatusPage extends StatefulWidget {
+  const DashboardStatusPage({super.key});
+
+  @override
+  State<DashboardStatusPage> createState() => _DashboardStatusPageState();
+}
+
+class _DashboardStatusPageState extends State<DashboardStatusPage> {
+  final SkyOSApiClient _apiClient = SkyOSApiClient(baseUrl: 'http://localhost:8000');
+  Map<String, dynamic>? _telemetryData;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTelemetry();
+  }
+
+  Future<void> _fetchTelemetry() async {
+    setState(() => _isLoading = true);
+    try {
+      final data = await _apiClient.getTelemetryStatus();
+      setState(() {
+        _telemetryData = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sky Studio Interface'),
+        title: const Text('SkyOS Dashboard & Bot Status'),
+        backgroundColor: const Color(0xFF1E293B),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: 'Prompt / Befehl eingeben...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  _response = 'Sende Anfrage an LM Studio...';
-                });
-
-                try {
-                  final response = await http.post(
-                    Uri.parse('http://localhost:1234/v1/chat/completions'),
-                    headers: {'Content-Type': 'application/json'},
-                    body: jsonEncode({
-                      "model": "mistralai/ministral-3-3b",
-                      "messages": [
-                        {"role": "user", "content": _controller.text}
-                      ],
-                      "temperature": 0.7
-                    }),
-                  );
-
-                  if (response.statusCode == 200) {
-                    final data = jsonDecode(response.body);
-                    setState(() {
-                      _response = data['choices'][0]['message']['content'];
-                    });
-                  } else {
-                    setState(() {
-                      _response = 'Fehler: ${response.statusCode}';
-                    });
-                  }
-                } catch (e) {
-                  setState(() {
-                    _response = 'Verbindungsfehler: $e\n(Läuft LM Studio?)';
-                  });
-                }
-              },
-              child: const Text('Anfragen'),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  border: Border.all(color: Colors.white24),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SingleChildScrollView(
-                  child: Text(_response),
+        child: RefreshIndicator(
+          onRefresh: _fetchTelemetry,
+          child: ListView(
+            children: [
+              Card(
+                color: const Color(0xFF1E293B),
+                child: ListTile(
+                  leading: const Icon(Icons.computer, color: Colors.tealAccent),
+                  title: const Text('FastAPI Core Engine'),
+                  subtitle: Text(_telemetryData != null
+                      ? 'Status: ${_telemetryData!["status"]} | ErrorRate: ${_telemetryData!["error_rate"]}%'
+                      : 'Verbunden mit http://localhost:8000'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _fetchTelemetry,
+                  ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              const Card(
+                color: Color(0xFF1E293B),
+                child: ListTile(
+                  leading: Icon(Icons.discord, color: Colors.indigoAccent),
+                  title: Text('Discord Bot Bridge'),
+                  subtitle: Text('Aktiv (!status, !ask, !papersync)'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Card(
+                color: Color(0xFF1E293B),
+                child: ListTile(
+                  leading: Icon(Icons.bluetooth_connected, color: Colors.blueAccent),
+                  title: Text('Bluetooth HFP Edge'),
+                  subtitle: Text('Security Mode 4 Level 4 (AES-CCM / ECDH)'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

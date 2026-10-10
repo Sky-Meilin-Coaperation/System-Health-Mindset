@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  skyos-core-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skyos-core-engine
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - HOST=0.0.0.0
+      - PORT=8000
+      - HF_TOKEN=${HF_TOKEN}
+      - JWT_SECRET=${JWT_SECRET:-skyos_super_secret_jwt_key_change_in_prod}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

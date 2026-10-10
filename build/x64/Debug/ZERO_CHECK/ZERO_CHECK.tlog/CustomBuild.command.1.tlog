@@ -1,0 +1,10 @@
+^C:\WORKSPACE LM STUDIO\BUILD\CMAKEFILES\5C85B8C4E857AD92095BFDC9B7ED1591\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\Microsoft Visual Studio\18\Insiders\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Workspace LM studio/sky_app/windows" "-BC:/Workspace LM studio/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Workspace LM studio/build/sky_app.slnx"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

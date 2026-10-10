@@ -1,0 +1,10 @@
+C:/Workspace LM studio/build/CMakeFiles/INSTALL.dir
+C:/Workspace LM studio/build/CMakeFiles/ALL_BUILD.dir
+C:/Workspace LM studio/build/CMakeFiles/ZERO_CHECK.dir
+C:/Workspace LM studio/build/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+C:/Workspace LM studio/build/flutter/CMakeFiles/flutter_wrapper_app.dir
+C:/Workspace LM studio/build/flutter/CMakeFiles/flutter_assemble.dir
+C:/Workspace LM studio/build/flutter/CMakeFiles/INSTALL.dir
+C:/Workspace LM studio/build/runner/CMakeFiles/sky_app.dir
+C:/Workspace LM studio/build/runner/CMakeFiles/INSTALL.dir
+C:/Workspace LM studio/build/runner/CMakeFiles/ALL_BUILD.dir

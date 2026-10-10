@@ -19,4 +19,3 @@ def ask_ollama(prompt: str, model: str = "deepseek-r1-0528-qwen3-8b") -> str:
         return f"Fehler bei Verbindung zu Ollama: {str(e)}"
 
 if __name__ == "__main__":
-    mcp.run()
