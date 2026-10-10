@@ -1,0 +1,1 @@
+const { chromium } = require('playwright'); (async () => { const browser = await chromium.launch(); const page = await browser.newPage(); await page.goto('about:blank'); await page.screenshot({ path: 'test.png' }); await browser.close(); console.log('Playwright OK'); })();

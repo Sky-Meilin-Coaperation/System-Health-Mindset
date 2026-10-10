@@ -1,0 +1,22 @@
+{
+  "identifier": "@lmstudio-hub:studiosky/first-studio",
+  "name": "first-studio",
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.65
+      },
+      {
+        "key": "llm.prediction.maxPredictedTokens",
+        "value": {
+          "checked": true,
+          "value": 420
+        }
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}
