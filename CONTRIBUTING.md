@@ -1,39 +1,19 @@
-# Beitrag zum Projekt
+# Richtlinien für Beiträge (CONTRIBUTING)
 
-Vielen Dank, dass du zu diesem Projekt beitragen möchtest. Ob Bugfixes, neue Features oder Verbesserungen der Dokumentation – jede Hilfe ist willkommen.
+Vielen Dank für dein Interesse am **SkyOS Workspace Setup**! Um die Code-Integrität, Sicherheit und Urheberschaft im Ökosystem zu gewährleisten, befolge bitte die folgenden Richtlinien.
 
-## So kannst du mitwirken
+---
 
-1. **Forke das Repository** und klone es lokal auf deinen Rechner.
-2. Erstelle einen neuen Branch für deine Änderung:
-   ```bash
-   git checkout -b feature/mein-feature
-   ```
-3. Führe deine Änderungen aus und teste sie lokal.
-4. Committe deine Änderungen:
-   ```bash
-   git commit -m "feat: neues Feature hinzugefügt"
-   ```
-5. Pushe deinen Branch zu deinem Fork:
-   ```bash
-   git push origin feature/mein-feature
-   ```
-6. Erstelle einen **Pull Request** auf GitHub.
+## 📐 Architektur- &amp; Code-Standards
 
-## Richtlinien
+1. **Clean Architecture &amp; State Management:**
 
-* Halte den Code sauber, nachvollziehbar und verständlich.
-* Dokumentiere neue Funktionen kurz in der README oder in den zugehörigen Dateien.
-* Achte auf saubere Tests und valide lokale Ausführung vor dem Merge.
-* Vermeide das Einbringen sensibler Informationen in Commits, Logs oder öffentliche Dateien.
+  * Flutter-Komponenten folgen strikt der Trennung in *Presentation*, *Domain* und *Data* (BLoC-Pattern).
+  * Python-Services nutzen typisierte DTOs für Datentransfers zwischen den Ebenen L0 bis L4.
+2. **Security First (Kein Plaintext):**
 
-## Qualitätsstandard
+  * API-Schlüssel, Passwörter oder persönliche Daten dürfen **niemals** im Quellcode gehardcodet werden.
+  * Nutze stets `.env` oder den nativen Tresor (`flutter_secure_storage`).
+3. **WORM Protocol &amp; Asset-Signierung:**
 
-Bevor du einen Beitrag einreichst:
-* prüfe die lokale App-Ausführung
-* validiere relevante Funktionen
-* dokumentiere Änderungen verständlich
-* lasse keine Secrets oder lokale Konfigurationsdaten im Repository zurück
-
-## Hinweis
-Die Projektentwicklung erfolgt im deutschen Sprachstil, damit die Zusammenarbeit und die Doku konsistent und nachvollziehbar bleiben.
+  * Jede wesentliche Code-Änderung oder neue Paketinstallation muss über den Security Agent signiert werden:
