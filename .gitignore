@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://www.dartlang.org/guides/libraries/private-files
 
 # Files and directories created by pub
@@ -29,6 +30,51 @@ doc/api/
 .flutter-plugins-dependencies
 ```
 # Secrets &amp; API Keys
+=======
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# IDEs & Editor temporaries
+
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.swp
+.swo
+*~
+
+# Operating System Files
+
+.DS_Store
+Thumbs.db
+
+# Exclude Proprietary Orchestration / External Tooling
+
+02_Orchestration/
+
+# Exclude Databases, Sheets, Binary Executables & Media
+
+*.xlsx
+*.ods
+*.csv
+*.exe
+*.png
+*.jpg
+*.jpeg
+
+# Local Test & Deployment Scripts
+
+test_*.py
+load_*.py
+list_*.py
+deploy_*.py
+sync_*.py
+
+# Secrets & Local Configs
+
+>>>>>>> 881b1d6 (update configuration and setup files)
 .env
 *.env.local
 *.env.*.local

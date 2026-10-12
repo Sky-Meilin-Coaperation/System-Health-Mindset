@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # FastAPI Core Engine – Hauptgateway für alle Requests
+  # ============================================================================
+  skyos-core-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skyos-core-engine
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - HOST=0.0.0.0
+      - PORT=8000
+      - HF_TOKEN=${HF_TOKEN}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - JWT_SECRET=${JWT_SECRET:-skyos_super_secret_jwt_key_change_in_prod}
+      - LM_STUDIO_BASE_URL=${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - ollama
+      - mariadb
+      - redis
+    networks:
+      - skyos-network
+
+  # ============================================================================
+  # Ollama – Lokale LLM-Inferenz (schnelle Klassifikation)
+  # ============================================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: skyos-ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - skyos-network
+
+  # ============================================================================
+  # MariaDB – Persistente Datenbank für Knowledge Tiers & Telemetrie
+  # ============================================================================
+  mariadb:
+    image: mariadb:10.11
+    container_name: skyos-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${DB_NAME:-skyos_knowledge}
+      MYSQL_USER: ${DB_USER:-skyos_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-skyos_password}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - skyos-network
+
+  # ============================================================================
+  # Redis – Caching & Session Store (optional, für Performance)
+  # ============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: skyos-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - skyos-network
+
+  # ============================================================================
+  # WordPress + System Health Dashboard (optional UI)
+  # ============================================================================
+  wordpress:
+    image: wordpress:latest
+    container_name: skyos-dashboard
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: ${DB_USER:-skyos_user}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-skyos_password}
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - skyos-network
+
+volumes:
+  ollama_data:
+  mariadb_data:
+  redis_data:
+  wordpress_data:
+
+networks:
+  skyos-network:
+    driver: bridge

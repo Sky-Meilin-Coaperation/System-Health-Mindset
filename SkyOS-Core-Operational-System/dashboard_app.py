@@ -2,7 +2,8 @@ import json
 import gradio as gr
 from pathlib import Path
 
-manifest_file = Path("manifest.json")
+BASE_DIR = Path(__file__).resolve().parent
+manifest_file = BASE_DIR / "manifest.json"
 data = json.loads(manifest_file.read_text(encoding="utf-8")) if manifest_file.exists() else {}
 
 with gr.Blocks(title="Sky Meilin | Operational Dashboard") as demo:

@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from huggingface_hub import HfApi
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # SSL-Kontext fuer Windows einrichten (nutzt certifi falls vorhanden, sonst unverified fallback)
 try:
     import certifi
@@ -13,7 +15,7 @@ try:
 except Exception:
     ssl_context = ssl._create_unverified_context()
 
-TARGET_DIR = Path("papers")
+TARGET_DIR = BASE_DIR / "papers"
 TARGET_DIR.mkdir(parents=True, exist_ok=True)
 
 api = HfApi(token=os.getenv("HF_TOKEN"))
@@ -45,7 +47,7 @@ print(f"Gefundene arXiv-Papiere: {len(paper_ids)}")
 
 def fetch_arxiv_meta(arxiv_id):
     clean_id = re.sub(r"v\d+$", "", arxiv_id)
-    url = f"http://export.arxiv.org/api/query?id_list={clean_id}"
+    url = f"https://export.arxiv.org/api/query?id_list={clean_id}"
     req = urllib.request.Request(url, headers={"User-Agent": "SkyOS-PaperSync/1.0"})
     
     try:
