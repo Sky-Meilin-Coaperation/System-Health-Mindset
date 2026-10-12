@@ -22,13 +22,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install Trivy
-        uses: aquasecurity/setup-trivy@81e514348e19b6112ce2a7e3ecbafe19c1e1f567
-        with:
-          version: v0.69.1
-
       - name: Run filesystem and dependency scan
-        run: trivy fs --config trivy.yaml --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --format sarif --output trivy-results.sarif .
+        run: docker run --rm --volume "$GITHUB_WORKSPACE:/workspace" --workdir /workspace aquasec/trivy:0.69.1 fs --config trivy.yaml --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --format sarif --output trivy-results.sarif .
 
       - name: Upload findings to GitHub code scanning
         if: always() && hashFiles('trivy-results.sarif') != ''
