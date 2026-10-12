@@ -9,8 +9,10 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 
+from system_health.audit_planner import AuditInputError
 from system_health.telemetry import collect_system_metrics
 from system_health.workflows import list_workflows, run_workflow
+from system_health.worm import verify_ledger
 
 _STARTED_AT = monotonic()
 _DASHBOARD_PATH = Path(__file__).parent / "static" / "index.html"
@@ -79,11 +81,18 @@ def get_workflows() -> dict[str, list[dict[str, str]]]:
     return {"workflows": list_workflows()}
 
 
+@app.get("/api/v1/audit/worm")
+def get_worm_audit() -> dict[str, Any]:
+    return verify_ledger()
+
+
 @app.post("/api/v1/workflows/{workflow_id}/trigger")
 def trigger_workflow(
     workflow_id: str, payload: dict[str, Any] | None = None
 ) -> dict[str, Any]:
     try:
         return run_workflow(workflow_id, payload or {})
+    except AuditInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Workflow not found") from exc

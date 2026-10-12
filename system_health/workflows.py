@@ -1,8 +1,13 @@
+import hashlib
+import json
 from datetime import UTC, datetime
 from typing import Any, Callable
 from uuid import uuid4
 
+from system_health.audit_planner import run_forensic_audit
+from system_health.package_audit import collect_installed_packages
 from system_health.telemetry import collect_system_metrics
+from system_health.worm import append_event
 
 WorkflowAction = Callable[[dict[str, Any]], dict[str, Any]]
 
@@ -11,11 +16,51 @@ def _run_system_diagnostic(_: dict[str, Any]) -> dict[str, Any]:
     return {"metrics": collect_system_metrics()}
 
 
+def _run_package_audit(_: dict[str, Any]) -> dict[str, Any]:
+    inventory = collect_installed_packages()
+    inventory_digest = hashlib.sha256(
+        json.dumps(
+            inventory,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    audit_entry = append_event(
+        {
+            "event_type": "package.inventory.audited",
+            "package_count": inventory["package_count"],
+            "inventory_sha256": inventory_digest,
+            "sources": inventory["sources"],
+            "packages": inventory["packages"],
+        }
+    )
+    return {
+        **inventory,
+        "inventory_sha256": inventory_digest,
+        "worm_audit": {
+            "sequence": audit_entry["sequence"],
+            "hash": audit_entry["hash"],
+        },
+    }
+
+
 _WORKFLOWS: dict[str, tuple[str, str, WorkflowAction]] = {
     "system-diagnostic": (
         "System diagnostic",
         "Capture a fresh snapshot of the host and application runtime.",
         _run_system_diagnostic,
+    ),
+    "package-audit": (
+        "Installed package audit",
+        "Inventory installed Python, npm, and Dart packages and anchor the snapshot in the WORM ledger.",
+        _run_package_audit,
+    ),
+    "forensic-audit": (
+        "Forensic evidence audit",
+        "Fingerprint submitted evidence, analyze fact consistency, review provenance limits, and record an ombuds decision in the WORM ledger.",
+        run_forensic_audit,
     ),
 }
 
@@ -33,10 +78,51 @@ def run_workflow(workflow_id: str, payload: dict[str, Any]) -> dict[str, Any]:
     except KeyError:
         raise KeyError(workflow_id) from None
 
+    run_id = str(uuid4())
+    started_at = datetime.now(UTC).isoformat()
+    append_event(
+        {
+            "event_type": "workflow.started",
+            "workflow_id": workflow_id,
+            "run_id": run_id,
+        }
+    )
+    try:
+        result = action(payload)
+    except Exception as exc:
+        append_event(
+            {
+                "event_type": "workflow.failed",
+                "workflow_id": workflow_id,
+                "run_id": run_id,
+                "error_type": type(exc).__name__,
+            }
+        )
+        raise
+
+    completed_at = datetime.now(UTC).isoformat()
+    audit_entry = append_event(
+        {
+            "event_type": "workflow.completed",
+            "workflow_id": workflow_id,
+            "run_id": run_id,
+            "result_sha256": hashlib.sha256(
+                json.dumps(
+                    result,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode("utf-8")
+            ).hexdigest(),
+        }
+    )
     return {
-        "run_id": str(uuid4()),
+        "run_id": run_id,
         "workflow_id": workflow_id,
         "status": "completed",
-        "started_at": datetime.now(UTC).isoformat(),
-        "result": action(payload),
+        "started_at": started_at,
+        "completed_at": completed_at,
+        "result": result,
+        "audit": {"sequence": audit_entry["sequence"], "hash": audit_entry["hash"]},
     }
