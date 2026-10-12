@@ -1,7 +1,12 @@
+import base64
 import hashlib
+import hmac
 import secrets
 import logging
+import struct
+import time
 from typing import List, Dict, Optional, Any
+from urllib.parse import quote, urlencode
 from pydantic import BaseModel, EmailStr, Field
 from fastapi import FastAPI, APIRouter, HTTPException, status
 
@@ -101,6 +106,27 @@ class SecurityStore:
 
 db_store = SecurityStore()
 
+
+def _new_totp_secret() -> str:
+    return base64.b32encode(secrets.token_bytes(20)).decode("ascii").rstrip("=")
+
+
+def _verify_totp(secret: str, code: str, window: int = 1) -> bool:
+    if len(code) != 6 or not code.isdigit():
+        return False
+
+    key = base64.b32decode(secret + "=" * (-len(secret) % 8), casefold=True)
+    counter = int(time.time()) // 30
+    for offset in range(-window, window + 1):
+        digest = hmac.new(key, struct.pack(">Q", counter + offset), hashlib.sha1).digest()
+        offset_bits = digest[-1] & 0x0F
+        value = struct.unpack(">I", digest[offset_bits : offset_bits + 4])[0] & 0x7FFFFFFF
+        expected = f"{value % 1_000_000:06d}"
+        if hmac.compare_digest(expected, code):
+            return True
+    return False
+
+
 @router.post("/register", response_model=AuthTokenResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(req: UserRegisterRequest):
     """Registriert einen Benutzer mit E-Mail, Passwort & Handynummer."""
@@ -120,7 +146,7 @@ async def register_user(req: UserRegisterRequest):
         "phone_number": req.phone_number,
         "full_name": req.full_name,
         "is_2fa_enabled": False,
-        "totp_secret": secrets.token_hex(10).upper(),
+        "totp_secret": _new_totp_secret(),
         "recovery_codes_hashed": hashed_recovery,
         "gravatar_url": gravatar_url
     }
@@ -150,7 +176,7 @@ async def login_user(req: UserLoginRequest):
             else:
                 raise HTTPException(status_code=401, detail="Ungueltiger Wiederherstellungscode.")
         elif req.totp_code:
-            if len(req.totp_code) != 6 or not req.totp_code.isdigit():
+            if not _verify_totp(user["totp_secret"], req.totp_code):
                 raise HTTPException(status_code=401, detail="Ungueltiger 2FA Code.")
         else:
             raise HTTPException(status_code=403, detail="2FA erforderlich.")
@@ -172,14 +198,15 @@ async def setup_two_factor(email: str):
     if not user:
         raise HTTPException(status_code=404, detail="Benutzer nicht gefunden.")
 
-    totp_secret = secrets.token_hex(10).upper()
+    totp_secret = _new_totp_secret()
     user["totp_secret"] = totp_secret
     user["is_2fa_enabled"] = True
 
     raw_recovery_codes = RecoveryCodeManager.generate_codes(8)
     user["recovery_codes_hashed"] = [RecoveryCodeManager.hash_code(c) for c in raw_recovery_codes]
 
-    totp_uri = f"totp_uri_{email}_{totp_secret}"
+    label = quote(f"SkyOS:{email}", safe="")
+    totp_uri = f"otpauth://totp/{label}?{urlencode({'secret': totp_secret, 'issuer': 'SkyOS', 'algorithm': 'SHA1', 'digits': 6, 'period': 30})}"
 
     return TwoFactorSetupResponse(
         secret=totp_secret,
