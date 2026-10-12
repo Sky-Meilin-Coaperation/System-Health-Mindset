@@ -1,5 +1,5 @@
 # 1. Aktuelles Debian-Derivat als Basis nutzen (Schließt viele bekannte OS-Lücken)
-FROM python:3.11-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 WORKDIR /app
 
