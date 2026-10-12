@@ -2,7 +2,6 @@
   "capabilities": [
     "read_workspace_spreadsheets",
     "deploy_hf_spaces",
-    "generate_pbr_image_prompts",
-    "trigger_n8n_webhooks"
+    "generate_pbr_image_prompts"
   ]
 }

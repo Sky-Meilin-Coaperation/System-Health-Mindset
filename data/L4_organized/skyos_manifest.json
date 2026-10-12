@@ -1,0 +1,17 @@
+{
+  "system_version": "SkyOS 1.0.0",
+  "tiered_data_level": "L4_Organized",
+  "knowledge_base": "Allgemeine Wissensdatenbank Pascal",
+  "persona": "Sky Meilin",
+  "worm_protocol": {
+    "status": "ACTIVE",
+    "hash_algorithm": "SHA-256",
+    "ledger_path": "data/L4_organized/worm_ledger.jsonl"
+  },
+  "endpoints": {
+    "lm_studio": "http://localhost:1234/v1",
+    "ollama": "http://localhost:11434/v1"
+  },
+  "license": "SkyOS Sustainable Use License v1.0",
+  "created_at": "2026-10-12T10:05:00Z"
+}
