@@ -11,6 +11,7 @@ from starlette.responses import Response
 
 from system_health.telemetry import collect_system_metrics
 from system_health.workflows import list_workflows, run_workflow
+from system_health.worm import verify_ledger
 
 _STARTED_AT = monotonic()
 _DASHBOARD_PATH = Path(__file__).parent / "static" / "index.html"
@@ -77,6 +78,11 @@ def get_telemetry() -> dict[str, Any]:
 @app.get("/api/v1/workflows")
 def get_workflows() -> dict[str, list[dict[str, str]]]:
     return {"workflows": list_workflows()}
+
+
+@app.get("/api/v1/audit/worm")
+def get_worm_audit() -> dict[str, Any]:
+    return verify_ledger()
 
 
 @app.post("/api/v1/workflows/{workflow_id}/trigger")

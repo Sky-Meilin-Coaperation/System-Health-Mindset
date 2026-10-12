@@ -14,9 +14,11 @@ Das **SkyOS-Ökosystem** ist eine modulare, containerbasierte und sicherheitszen
    - Basierend auf *Data-Model Co-Evolution* (arXiv 2602.09003).
    - Transformation von Rohdaten (L0) zu verifiziertem, strukturiertem Wissen (L4 Master-Manifest).
 
-3. **WORM Security Agent & Prioritätsnachweis:**
-   - Fälschungssichere Append-Only SHA-256 Hash-Chain (`data/L4_organized/worm_ledger.jsonl`).
-   - Mathematischer **Proof of Prior Art** zur rechtlichen Absicherung gegen Fremd-Claiming.
+3. **WORM-Audit-Ledger:**
+   - Append-only JSONL-Ledger mit SHA-256-Hash-Chain unter `data/L4_organized/worm_ledger.jsonl`.
+   - Workflow-Start, Abschluss und Fehler werden protokolliert; abgeschlossene Ergebnisse werden über ihren SHA-256-Hash referenziert.
+   - `GET /api/v1/audit/worm` prüft Sequenz, Verkettung und Eintragshashes; `WORM_LEDGER_PATH` kann den Ledger-Pfad überschreiben.
+   - Das Ledger ist manipulations-erkennbar, aber ohne extern verankerte Signatur oder unveränderlichen Speicher kein kryptografischer Beweis gegen privilegierte Änderungen an der gesamten Datei.
 
 4. **Fortschritts-Tracker & Telemetrie:**
    - Interaktive SQLite-Datenbank (`progress_tracker.db`) gekoppelt mit WORM-Events.
@@ -51,6 +53,8 @@ uvicorn app:app --reload
 Open `http://localhost:8000` for the dashboard, `http://localhost:8000/docs` for the API, and `http://localhost:8000/health` for the container health check. Build and run the same core with `docker compose up --build`.
 
 The telemetry endpoint reports the core process uptime, filesystem usage, processor count and load average where supported, and memory usage. It prefers a configured container memory limit and otherwise reports host memory on Linux; unavailable metrics are reported as unavailable rather than inferred.
+
+Run the WORM ledger and workflow audit tests with `python -m unittest discover -v`.
 
 ---
 
