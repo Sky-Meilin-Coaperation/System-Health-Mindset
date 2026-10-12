@@ -18,7 +18,9 @@ Das **SkyOS-Ökosystem** ist eine modulare, containerbasierte und sicherheitszen
    - Append-only JSONL-Ledger mit SHA-256-Hash-Chain unter `data/L4_organized/worm_ledger.jsonl`.
    - Workflow-Start, Abschluss und Fehler werden protokolliert; abgeschlossene Ergebnisse werden über ihren SHA-256-Hash referenziert.
    - `GET /api/v1/audit/worm` prüft Sequenz, Verkettung und Eintragshashes; `WORM_LEDGER_PATH` kann den Ledger-Pfad überschreiben.
+   - Der Workflow `package-audit` inventarisiert installierte pip-, npm- und pub-Pakete samt SHA-256-Fingerprints und schreibt den vollständigen Snapshot in die WORM-Kette. pip-Fingerprints basieren auf den bei der Installation erfassten RECORD-Metadaten; npm/pub werden anhand installierter Paketdateien fingerprinted. Aufruf: `POST /api/v1/workflows/package-audit/trigger`.
    - Das Ledger ist manipulations-erkennbar, aber ohne extern verankerte Signatur oder unveränderlichen Speicher kein kryptografischer Beweis gegen privilegierte Änderungen an der gesamten Datei.
+   - Der Paket-Audit ist eine explizite Inventur, kein globaler Installations-Hook: nach Paketinstallationen oder Deployments erneut ausführen. Er belegt keine Patentpriorität oder rechtliche Urheberschaft.
 
 4. **Fortschritts-Tracker & Telemetrie:**
    - Interaktive SQLite-Datenbank (`progress_tracker.db`) gekoppelt mit WORM-Events.

@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from typing import Any, Callable
 from uuid import uuid4
 
+from system_health.package_audit import collect_installed_packages
 from system_health.telemetry import collect_system_metrics
 from system_health.worm import append_event
 
@@ -14,11 +15,46 @@ def _run_system_diagnostic(_: dict[str, Any]) -> dict[str, Any]:
     return {"metrics": collect_system_metrics()}
 
 
+def _run_package_audit(_: dict[str, Any]) -> dict[str, Any]:
+    inventory = collect_installed_packages()
+    inventory_digest = hashlib.sha256(
+        json.dumps(
+            inventory,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    audit_entry = append_event(
+        {
+            "event_type": "package.inventory.audited",
+            "package_count": inventory["package_count"],
+            "inventory_sha256": inventory_digest,
+            "sources": inventory["sources"],
+            "packages": inventory["packages"],
+        }
+    )
+    return {
+        **inventory,
+        "inventory_sha256": inventory_digest,
+        "worm_audit": {
+            "sequence": audit_entry["sequence"],
+            "hash": audit_entry["hash"],
+        },
+    }
+
+
 _WORKFLOWS: dict[str, tuple[str, str, WorkflowAction]] = {
     "system-diagnostic": (
         "System diagnostic",
         "Capture a fresh snapshot of the host and application runtime.",
         _run_system_diagnostic,
+    ),
+    "package-audit": (
+        "Installed package audit",
+        "Inventory installed Python, npm, and Dart packages and anchor the snapshot in the WORM ledger.",
+        _run_package_audit,
     ),
 }
 
