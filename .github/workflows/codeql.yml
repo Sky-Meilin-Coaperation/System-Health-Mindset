@@ -1,4 +1,4 @@
-name: CodeQL Kotlin scan
+name: CodeQL security scan
 
 on:
   push:
@@ -16,42 +16,60 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze Kotlin
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
+          - language: java-kotlin
+            build-mode: manual
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Set up Java
+        if: matrix.language == 'java-kotlin'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
       - name: Set up Flutter
+        if: matrix.language == 'java-kotlin'
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
 
       - name: Set up Gradle
+        if: matrix.language == 'java-kotlin'
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "9.3.1"
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
-          languages: kotlin
-          build-mode: manual
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
-      - name: Build Kotlin code for analysis
-        run: |
-          cd sky_app
-          flutter pub get
-          cd android
-          gradle :app:compileDebugKotlin -x :app:compileFlutterBuildDebug
+      - name: Resolve Flutter project files
+        if: matrix.language == 'java-kotlin'
+        run: flutter pub get
+        working-directory: sky_app
+
+      - name: Compile Android Kotlin for analysis
+        if: matrix.language == 'java-kotlin'
+        run: gradle :app:compileDebugKotlin -x :app:compileFlutterBuildDebug
+        working-directory: sky_app/android
 
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4

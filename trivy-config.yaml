@@ -1,6 +1,2 @@
-scan:
-  skip-files:
-    - "**/*.kt"
-
 vulnerability:
   ignore-unfixed: true

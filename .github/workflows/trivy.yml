@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run filesystem and dependency scan
-        run: docker run --rm --volume "$GITHUB_WORKSPACE:/workspace" --workdir /workspace aquasec/trivy:0.69.1 fs --config trivy.yaml --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --format sarif --output trivy-results.sarif .
+        run: docker run --rm --volume "$GITHUB_WORKSPACE:/workspace" --workdir /workspace aquasec/trivy:0.69.1 fs --config trivy-config.yaml --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --format sarif --output trivy-results.sarif .
 
       - name: Upload findings to GitHub code scanning
         if: always() && hashFiles('trivy-results.sarif') != ''
