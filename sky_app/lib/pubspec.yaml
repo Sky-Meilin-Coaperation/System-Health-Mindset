@@ -16,7 +16,7 @@ dependencies:
   google_fonts: ^6.1.0
 
   # WebRTC Real-time Avatar Video & Audio Streaming
-  flutter_webrtc: ^0.9.48+1
+  flutter_webrtc: ^0.11.6+hotfix.1
 
   # Networking & Real-time WebSockets
   http: ^1.2.0
