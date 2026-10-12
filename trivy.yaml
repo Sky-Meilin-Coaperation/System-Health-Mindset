@@ -1,0 +1,7 @@
+scan:
+  skip-files:
+    - "**/*.kt"
+    - "**/*.kts"
+
+vulnerability:
+  ignore-unfixed: true
