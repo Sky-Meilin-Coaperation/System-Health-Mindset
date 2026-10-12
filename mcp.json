@@ -1,17 +1,11 @@
 {
   "mcpServers": {
-    "uv": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "run",
-        "--with",
-        "mcp",
-        "mcp",
-        "run",
-        "mcp_server.py"
-      ],
-      "cwd": "C:\\Workspace LM studio\\sky_app"
+    "system-health-mindset": {
+      "command": "python",
+      "args": ["/workspaces/System-Health-Mindset/app.py"],
+      "env": {
+        "WORM_STRICT_MODE": "true"
+      }
     }
   }
 }

@@ -37,6 +37,21 @@ python3 [verdächtiger Link entfernt] init
 python3 [verdächtiger Link entfernt] list
 ```
 
+## System Health Evolution – The Box
+
+The repository includes a runnable FastAPI operations core with a browser dashboard, live runtime telemetry, and an extensible workflow registry. The built-in `system-diagnostic` workflow captures a fresh telemetry snapshot; new workflow actions can be registered in `system_health/workflows.py`.
+
+Run locally with Python:
+
+```bash
+pip install -r REQUIREMENTS.txt
+uvicorn app:app --reload
+```
+
+Open `http://localhost:8000` for the dashboard, `http://localhost:8000/docs` for the API, and `http://localhost:8000/health` for the container health check. Build and run the same core with `docker compose up --build`.
+
+The telemetry endpoint reports the core process uptime, filesystem usage, processor count and load average where supported, and memory usage. It prefers a configured container memory limit and otherwise reports host memory on Linux; unavailable metrics are reported as unavailable rather than inferred.
+
 ---
 
 ## 📜 Lizenz

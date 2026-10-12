@@ -1,42 +1,4 @@
 services:
-<<<<<<< HEAD
-  wordpress:
-    image: wordpress:latest
-    restart: always
-    ports:
-      - "8080:80"
-    environment:
-      WORDPRESS_DB_HOST: mariadb
-      WORDPRESS_DB_USER: wp_user
-      WORDPRESS_DB_PASSWORD: wp_password
-      WORDPRESS_DB_NAME: wp_db
-    volumes:
-      - wordpress_data:/var/www/html
-
-  mariadb:
-    image: mariadb:10.6
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: wp_db
-      MYSQL_USER: wp_user
-      MYSQL_PASSWORD: wp_password
-    volumes:
-      - mariadb_data:/var/lib/mysql
-
-  ollama:
-    image: ollama/ollama:latest
-    restart: always
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-
-volumes:
-  wordpress_data:
-  mariadb_data:
-  ollama_data:
-=======
   # ============================================================================
   # FastAPI Core Engine – Hauptgateway für alle Requests
   # ============================================================================
@@ -49,13 +11,13 @@ volumes:
     ports:
       - "8000:8000"
     environment:
-      - ENV=production
-      - HOST=0.0.0.0
-      - PORT=8000
-      - HF_TOKEN=${HF_TOKEN}
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - JWT_SECRET=${JWT_SECRET:-skyos_super_secret_jwt_key_change_in_prod}
-      - LM_STUDIO_BASE_URL=${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
+      ENV: production
+      HOST: 0.0.0.0
+      PORT: "8000"
+      HF_TOKEN: ${HF_TOKEN}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
+      JWT_SECRET: ${JWT_SECRET:-skyos_super_secret_jwt_key_change_in_prod}
+      LM_STUDIO_BASE_URL: ${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -79,7 +41,7 @@ volumes:
     ports:
       - "11434:11434"
     environment:
-      - OLLAMA_HOST=0.0.0.0:11434
+      OLLAMA_HOST: 0.0.0.0:11434
     volumes:
       - ollama_data:/root/.ollama
     networks:
@@ -153,4 +115,3 @@ volumes:
 networks:
   skyos-network:
     driver: bridge
->>>>>>> 881b1d6 (update configuration and setup files)
