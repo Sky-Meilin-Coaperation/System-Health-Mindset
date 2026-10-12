@@ -50,7 +50,7 @@ jobs:
           cd sky_app
           flutter pub get
           cd android
-          gradle :app:assembleDebug
+          gradle :app:compileDebugKotlin
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
