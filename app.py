@@ -9,6 +9,7 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 
+from system_health.audit_planner import AuditInputError
 from system_health.telemetry import collect_system_metrics
 from system_health.workflows import list_workflows, run_workflow
 from system_health.worm import verify_ledger
@@ -91,5 +92,7 @@ def trigger_workflow(
 ) -> dict[str, Any]:
     try:
         return run_workflow(workflow_id, payload or {})
+    except AuditInputError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Workflow not found") from exc

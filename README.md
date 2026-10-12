@@ -21,6 +21,8 @@ Das **SkyOS-Ökosystem** ist eine modulare, containerbasierte und sicherheitszen
    - Der Workflow `package-audit` inventarisiert installierte pip-, npm- und pub-Pakete samt SHA-256-Fingerprints und schreibt den vollständigen Snapshot in die WORM-Kette. pip-Fingerprints basieren auf den bei der Installation erfassten RECORD-Metadaten; npm/pub werden anhand installierter Paketdateien fingerprinted. Aufruf: `POST /api/v1/workflows/package-audit/trigger`.
    - Das Ledger ist manipulations-erkennbar, aber ohne extern verankerte Signatur oder unveränderlichen Speicher kein kryptografischer Beweis gegen privilegierte Änderungen an der gesamten Datei.
    - Der Paket-Audit ist eine explizite Inventur, kein globaler Installations-Hook: nach Paketinstallationen oder Deployments erneut ausführen. Er belegt keine Patentpriorität oder rechtliche Urheberschaft.
+   - Der Workflow `forensic-audit` führt vier deterministische Prüfschritte aus: Dokumentenaufnahme mit SHA-256-Fingerprints, Fakten-Widerspruchsanalyse, technische Provenienz-/Grenzenprüfung und Ombuds-Entscheidung mit Auflagen. Aufruf: `POST /api/v1/workflows/forensic-audit/trigger` mit `case_id` sowie `evidence`-Liste aus `id`, `source`, `content` und optional `facts`/`sha256`.
+   - Der WORM-Eintrag bewahrt Fingerprints und deklarierte Fakten, nicht den vollständigen Beleginhalt. Originaldateien müssen separat aufbewahrt werden; der Audit gibt keine Patent-, Urheberrechts- oder Compliance-Zertifizierung.
 
 4. **Fortschritts-Tracker & Telemetrie:**
    - Interaktive SQLite-Datenbank (`progress_tracker.db`) gekoppelt mit WORM-Events.

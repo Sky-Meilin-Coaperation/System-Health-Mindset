@@ -11,6 +11,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from app import app
+from system_health.audit_planner import run_forensic_audit
 from system_health import workflows
 from system_health.package_audit import collect_installed_packages
 from system_health.worm import LedgerIntegrityError, append_event, verify_ledger
@@ -214,6 +215,66 @@ class WormLedgerTests(unittest.TestCase):
         self.assertEqual(packages["pub"]["fingerprint_scope"], "installed-files")
         self.assertEqual(packages["npm"]["file_count"], 2)
         self.assertEqual(packages["pub"]["file_count"], 2)
+
+    def test_forensic_audit_captures_hashes_conflicts_and_ombuds_decision(self) -> None:
+        report = run_forensic_audit(
+            {
+                "case_id": "AUD-TEST-1",
+                "evidence": [
+                    {
+                        "id": "source-a",
+                        "source": "document-a.txt",
+                        "content": "Reported amount: 100",
+                        "facts": [{"fact_key": "amount", "value": 100}],
+                    },
+                    {
+                        "id": "source-b",
+                        "source": "document-b.txt",
+                        "content": "Reported amount: 200",
+                        "facts": [{"fact_key": "amount", "value": 200}],
+                    },
+                ],
+            }
+        )
+
+        self.assertEqual(report["status"], "hold")
+        document_agent, analyst_agent, expert_agent, ombuds_agent = report["agents"]
+        self.assertEqual(document_agent["evidence_count"], 2)
+        self.assertEqual(len(document_agent["evidence"][0]["content_sha256"]), 64)
+        self.assertEqual(analyst_agent["findings"][0]["code"], "conflicting-facts")
+        self.assertEqual(expert_agent["agent"], "technical-reviewer")
+        self.assertEqual(ombuds_agent["decision"], "hold")
+        self.assertEqual(verify_ledger()["entry_count"], 1)
+
+    def test_forensic_audit_requires_real_sha256_and_bounded_evidence(self) -> None:
+        response = TestClient(app).post(
+            "/api/v1/workflows/forensic-audit/trigger",
+            json={
+                "case_id": "AUD-TEST-2",
+                "evidence": [
+                    {
+                        "id": "source-a",
+                        "source": "document-a.txt",
+                        "content": "evidence",
+                        "sha256": "not-a-real-match",
+                    }
+                ],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        report = response.json()["result"]
+        self.assertEqual(report["status"], "hold")
+        self.assertEqual(
+            report["agents"][0]["findings"][0]["code"],
+            "evidence-hash-mismatch",
+        )
+
+        invalid = TestClient(app).post(
+            "/api/v1/workflows/forensic-audit/trigger",
+            json={"case_id": "AUD-TEST-3", "evidence": []},
+        )
+        self.assertEqual(invalid.status_code, 422)
 
 
 if __name__ == "__main__":

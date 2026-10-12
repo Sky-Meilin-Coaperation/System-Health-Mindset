@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from typing import Any, Callable
 from uuid import uuid4
 
+from system_health.audit_planner import run_forensic_audit
 from system_health.package_audit import collect_installed_packages
 from system_health.telemetry import collect_system_metrics
 from system_health.worm import append_event
@@ -55,6 +56,11 @@ _WORKFLOWS: dict[str, tuple[str, str, WorkflowAction]] = {
         "Installed package audit",
         "Inventory installed Python, npm, and Dart packages and anchor the snapshot in the WORM ledger.",
         _run_package_audit,
+    ),
+    "forensic-audit": (
+        "Forensic evidence audit",
+        "Fingerprint submitted evidence, analyze fact consistency, review provenance limits, and record an ombuds decision in the WORM ledger.",
+        run_forensic_audit,
     ),
 }
 
