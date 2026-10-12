@@ -23,7 +23,7 @@ dependencies:
   web_socket_channel: ^2.4.1
 
   # Security, Vault & AutoFill Support
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: ^10.3.4
   crypto: ^3.0.3
 
   # Local Media Storage, Reel Vault & Video Player
